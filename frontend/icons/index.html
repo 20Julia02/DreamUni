@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <title>DreamUni</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #1e222b;
+      --sidebar-bg: #161920;
+      --accent-orange: #ff6f1f;
+      --border-color: #2e3440;
+      --text-main: #ffffff;
+      --text-muted: #a0a5b5;
+      --input-bg: #282d37;
+      --panel-bg: #1a1d26;
+      --partner-bg: #282c37;
+    }
+
+    body { 
+      margin: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+    }
+    
+    .layout { 
+      display: grid; 
+      grid-template-columns: 360px 1fr; 
+      position: relative;
+      height: 100vh; 
+      width: 100vw;
+    }
+    
+    .sidebar { 
+      background-color: var(--sidebar-bg);
+      padding: 30px 24px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto; 
+      box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+
+    .sidebar-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h1 { 
+      font-family: 'Georgia', serif;
+      font-size: 32px; 
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin: 0 0 20px 0; 
+      color: var(--text-main);
+    }
+
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 15px 0 10px 0;
+    }
+
+    .purple-divider {
+      height: 2px;
+      background: linear-gradient(90deg, #7b2cbf, transparent);
+      margin-bottom: 25px;
+      border: none;
+    }
+    
+    label { 
+      display: block; 
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted); 
+      margin-top: 18px; 
+      margin-bottom: 6px;
+    }
+    
+    .search-container {
+      position: relative;
+    }
+    .search-container input[type="text"] {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      background-color: var(--input-bg);
+      border: 1.5px solid var(--accent-orange);
+      border-radius: 20px;
+      color: var(--text-main);
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    select { 
+      width: 100%; 
+      padding: 11px 14px; 
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 14px;
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a0a5b5' viewBox='0 0 16 16'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      box-sizing: border-box;
+    }
+    select:focus {
+      outline: none;
+      border-color: var(--accent-orange);
+    }
+
+    .radio-group {
+      margin-top: 8px;
+    }
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      text-transform: none;
+      color: var(--text-main);
+      margin: 8px 0;
+    }
+    .radio-label input {
+      display: none;
+    }
+    .custom-radio {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: #555;
+      display: inline-block;
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
+    }
+    .radio-label input:checked + .custom-radio.degree1 {
+      background: radial-gradient(circle, #ffaa44 0%, var(--accent-orange) 100%);
+      box-shadow: 0 0 8px var(--accent-orange);
+    }
+    .radio-label input:checked + .custom-radio.degree2 {
+      background: radial-gradient(circle, #888 0%, #444 100%);
+      box-shadow: 0 0 8px #888;
+    }
+
+    .range-container {
+      margin-top: 10px;
+    }
+    .rank-range {
+      --range-start: 0%;
+      --range-end: 100%;
+      position: relative;
+      height: 18px;
+      margin-top: 8px;
+      background: linear-gradient(
+        to right,
+        #444 0%,
+        #444 var(--range-start),
+        var(--accent-orange) var(--range-start),
+        var(--accent-orange) var(--range-end),
+        #444 var(--range-end),
+        #444 100%
+      );
+      background-size: 100% 6px;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 3px;
+    }
+    .rank-range input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 18px;
+      margin: 0;
+      background: transparent;
+      outline: none;
+      pointer-events: none;
+    }
+    .rank-range input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+      pointer-events: auto;
+    }
+    .rank-range input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+      pointer-events: auto;
+    }
+    .rank-range input[type="range"]::-moz-range-track {
+      background: transparent;
+    }
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .range-labels .active-val {
+      color: var(--accent-orange);
+      font-weight: bold;
+    }
+    
+    .btn-submit { 
+      background-color: var(--accent-orange);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 14px;
+      width: 100%;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      margin-top: 25px;
+      transition: background 0.2s;
+    }
+    .btn-submit:hover {
+      background-color: #e05612;
+    }
+
+    .btn-reset {
+      width: 100%;
+      margin-top: 20px;
+      padding: 11px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background-color: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-reset:hover {
+      border-color: var(--accent-orange);
+      color: var(--text-main);
+    }
+
+    .count { 
+      margin-top: 15px; 
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    
+    #map { 
+      width: 100%; 
+      height: 100%; 
+      background-color: #1a1e28; 
+    }
+    .partners-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 25px;
+      border-top: 1px solid var(--border-color);
+    }
+    .partners-footer img {
+      height: 20px;
+      filter: grayscale(100%) brightness(0.8);
+      opacity: 0.7;
+      transition: all 0.2s;
+    }
+    .partners-footer img:hover {
+      filter: none;
+      opacity: 1;
+    }
+
+    /* NOWY PANEL BOCZNY (Z PRAWEJ STRONY) */
+    .right-panel {
+      position: absolute;
+      top: 0;
+      right: -380px; /* Domyślnie schowany */
+      width: 350px;
+      height: 100vh;
+      background-color: var(--panel-bg);
+      box-shadow: -4px 0 15px rgba(0,0,0,0.5);
+      z-index: 1000;
+      transition: right 0.3s ease-in-out;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-panel.open {
+      right: 0; /* Pokazanie panelu */
+    }
+
+    .panel-header {
+      position: relative;
+    }
+
+    .panel-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .panel-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .panel-close-btn:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .panel-back-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    .panel-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 0 12px 0;
+    }
+
+    .panel-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+
+    .panel-badge {
+      background-color: #2a2f3d;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .panel-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    .panel-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin: 20px 0 10px 0;
+      font-weight: bold;
+    }
+
+    .panel-divider {
+      border: none;
+      height: 1px;
+      background-color: var(--border-color);
+      margin: 15px 0;
+    }
+
+    .text-orange {
+      color: var(--accent-orange);
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .panel-link {
+      color: var(--accent-orange);
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .panel-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Paski postępu kosztów */
+    .cost-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .cost-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 110px;
+    }
+    .cost-progress-bar {
+      flex-grow: 1;
+      height: 8px;
+      background-color: #2e3440;
+      border-radius: 4px;
+      margin: 0 15px;
+      overflow: hidden;
+    }
+    .cost-progress-fill {
+      height: 100%;
+      background-color: #ff6f1f;
+      border-radius: 4px;
+    }
+    .cost-value {
+      width: 55px;
+      text-align: right;
+    }
+
+    /* Sekcja partnerów */
+    .partner-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--partner-bg);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .partner-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .partner-icon {
+      font-size: 20px;
+      color: var(--text-muted);
+      width: 24px;
+      text-align: center;
+    }
+    .partner-name {
+      font-weight: bold;
+      font-size: 13px;
+    }
+    .partner-type {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .partner-distance {
+      background-color: #1e222b;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .see-all-partners {
+      display: block;
+      text-align: center;
+      color: var(--accent-orange);
+      font-size: 13px;
+      font-weight: bold;
+      text-decoration: none;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+
+    /* Minimalistyczne kropki uczelni i klastry */
+    .university-dot-icon,
+    .university-cluster-icon {
+      background: transparent;
+      border: none;
+    }
+
+    .university-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: var(--rank-color);
+      box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--rank-color) 30%, transparent),
+        0 0 8px 3px color-mix(in srgb, var(--rank-color) 55%, transparent);
+    }
+
+    .university-label {
+      position: absolute;
+      top: 50%;
+      left: 22px;
+      transform: translateY(-50%);
+      max-width: 260px;
+      padding: 5px 10px;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--rank-color) 58%, transparent);
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--rank-color) 68%, transparent);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+      color: #ffffff;
+      font-family: "Inter", sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .university-cluster {
+      width: var(--cluster-size);
+      height: var(--cluster-size);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      color: #fff;
+      font-weight: 800;
+      font-size: var(--cluster-font-size);
+      letter-spacing: 0.2px;
+      background: var(--rank-color);
+      box-shadow:
+        0 0 0 calc(var(--cluster-size) * 0.3) color-mix(in srgb, var(--rank-color) 24%, transparent)
+    }
+
+    .leaflet-marker-icon.university-dot-icon,
+    .leaflet-marker-icon.university-cluster-icon {
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .leaflet-marker-icon.university-dot-icon:hover,
+    .leaflet-marker-icon.university-cluster-icon:hover {
+      filter: brightness(1.08);
+      transform: scale(1.08);
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <div class="sidebar">
+      <div class="sidebar-content">
+        <h1>DreamUni</h1>
+        
+        <div class="section-title">Filtry</div>
+        <hr class="purple-divider">
+
+        <label for="searchField">Wyszukaj uczelnię</label>
+        <div class="search-container">
+          <input type="text" id="searchField" placeholder="Szukaj">
+        </div>
+
+        <label for="country">Wybierz kraj</label>
+        <select id="country">
+          <option value="">Wybierz kraj</option>
+        </select>
+
+        <label for="language">Wybierz język</label>
+        <select id="language">
+          <option value="">Wszystkie języki</option>
+        </select>
+
+        <label>Pozycja w rankingu</label>
+        <div class="range-container">
+          <div class="rank-range" id="rankRange">
+            <input type="range" id="rankFrom" min="1" max="1400" value="1" aria-label="Ranking od">
+            <input type="range" id="rankTo" min="1" max="1400" value="1400" aria-label="Ranking do">
+          </div>
+          <div class="range-labels">
+            <span id="rankFromLabel">Od 1</span>
+            <span id="rankToLabel">Do 1400</span>
+          </div>
+        </div>
+
+        <button id="resetFiltersBtn" class="btn-reset" type="button">Resetuj filtry</button>
+        <div class="count" id="count"></div>
+      </div>
+
+      <div class="partners-footer">
+        <img src="https://furgonetka.pl/img/furgonetka_logo.svg" alt="Furgonetka" onerror="this.style.display='none'">
+        <span style="font-size:11px; font-weight:bold; color:#fff;">BeActive</span>
+        <span style="font-size:11px; font-weight:bold; color:#ff6f00;">ING</span>
+        <span style="font-size:11px; font-weight:bold; color:#005ca9;">PZU</span>
+        <span style="font-size:10px; font-weight:bold; color:#fff; background:#000; padding:2px 4px;">Student depot</span>
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="rightPanel" class="right-panel">
+      <div class="panel-header">
+        <button class="panel-back-btn" onclick="closeRightPanel()">←</button>
+        <button class="panel-close-btn" onclick="closeRightPanel()">×</button>
+        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=600&q=80" alt="University" class="panel-img">
+      </div>
+      <div class="panel-body">
+        <div id="panelTitle" class="panel-title">Uniwersytet Oksfordzki</div>
+        
+        <div class="panel-meta">
+          <span style="color: red; font-size: 16px;">●</span>
+          <span id="panelLocation">Oksford, Wielka Brytania</span>
+          <span class="panel-badge" id="panelRank">1 miejsce</span>
+        </div>
+
+        <div class="panel-desc" id="panelDesc">
+          Brytyjska uczelnia publiczna w Oksfordzie, założona przed 1167 rokiem, najstarszy uniwersytet w Wielkiej Brytanii i krajach anglosaskich.
+        </div>
+
+        <hr class="panel-divider">
+
+        <div class="panel-section-title">Języki nauczania</div>
+        <div class="text-orange" id="panelLanguages">Brak danych</div>
+
+        <hr class="panel-divider">
+
+        <div class="panel-section-title">Strona internetowa</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="color:var(--text-muted)">🌐</span>
+          <a href="#" id="panelWebsite" target="_blank" class="panel-link">https://www.ox.ac.uk/</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.2/leaflet-maplibre-gl.js"></script>
+
+  <script>
+    const API_BASE = "http://127.0.0.1:5000";
+    const STREET_MAP_ZOOM = 9;
+    const UNIVERSITY_FOCUS_ZOOM = 15;
+    const UNIVERSITY_LABEL_ZOOM = 14;
+
+    const map = L.map("map").setView([51, 12], 4);
+    let countriesLayer = null;
+    const overviewCountryStyle = {
+      fillColor: "#9398a6",
+      fillOpacity: 1,
+      color: "#161a23",
+      weight: 1
+    };
+
+    const streetLayer = L.maplibreGL({
+      style: "https://tiles.openfreemap.org/styles/positron",
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://openfreemap.org/">OpenFreeMap</a>'
+    });
+    function customizeStreetMap() {
+      const glMap = streetLayer.getMaplibreMap();
+      const setPaint = (layerId, property, value) => {
+        if (glMap.getLayer(layerId)) {
+          glMap.setPaintProperty(layerId, property, value);
+        }
+      };
+
+      setPaint("background", "background-color", "#1d2b3f");
+      setPaint("water", "fill-color", "#34485f");
+      setPaint("park", "fill-color", "#243449");
+      setPaint("landuse_residential", "fill-color", "#223247");
+      setPaint("landcover_wood", "fill-color", "#27374c");
+      setPaint("landcover_ice_shelf", "fill-color", "#526176");
+      setPaint("landcover_glacier", "fill-color", "#59687c");
+      setPaint("building", "fill-color", "#354359");
+      setPaint("building", "fill-outline-color", "#354359");
+      setPaint("aeroway-area", "fill-color", "#2c3b50");
+      setPaint("road_area_pier", "fill-color", "#405067");
+
+      [
+        "highway_path",
+        "highway_minor",
+        "highway_major_inner",
+        "highway_motorway_inner",
+        "highway_motorway_bridge_inner"
+      ].forEach(layerId => setPaint(layerId, "line-color", "#46566d"));
+
+      [
+        "highway_major_casing",
+        "highway_motorway_casing",
+        "highway_motorway_bridge_casing",
+        "tunnel_motorway_casing"
+      ].forEach(layerId => {
+        setPaint(layerId, "line-color", "#344359");
+        setPaint(layerId, "line-opacity", 0);
+      });
+
+      [
+        "waterway",
+        "railway",
+        "railway_dashline",
+        "railway_service",
+        "railway_service_dashline",
+        "railway_transit",
+        "railway_transit_dashline"
+      ].forEach(layerId => setPaint(layerId, "line-color", "#44536a"));
+
+      ["boundary_2", "boundary_3"].forEach(layerId => {
+        setPaint(layerId, "line-color", "#65748a");
+        setPaint(layerId, "line-opacity", 0.65);
+      });
+
+      glMap.getStyle().layers.forEach(layer => {
+        if (layer.type === "symbol") {
+          glMap.setLayoutProperty(layer.id, "visibility", "none");
+        }
+
+        if (layer.type === "line") {
+          const sourceLayer = layer["source-layer"] || "";
+          const isRoad =
+            sourceLayer === "transportation" ||
+            layer.id.includes("highway") ||
+            layer.id.includes("motorway") ||
+            layer.id.includes("road") ||
+            layer.id.includes("aeroway");
+
+          if (isRoad) {
+            glMap.setPaintProperty(layer.id, "line-color", "#4a5a70");
+            glMap.setPaintProperty(layer.id, "line-opacity", 0.72);
+          }
+        }
+      });
+    }
+
+    fetch("https://cdn.jsdelivr.net/gh/johan/world.geo.json@master/countries.geo.json")
+      .then(response => response.json())
+      .then(data => {
+        countriesLayer = L.geoJSON(data, {
+          style: overviewCountryStyle,
+          interactive: false
+        });
+        updateBaseMap();
+      });
+
+    function updateBaseMap() {
+      const showStreets = map.getZoom() >= STREET_MAP_ZOOM;
+
+      if (showStreets) {
+        if (countriesLayer && map.hasLayer(countriesLayer)) {
+          map.removeLayer(countriesLayer);
+        }
+        if (!map.hasLayer(streetLayer)) {
+          streetLayer.addTo(map);
+          const glMap = streetLayer.getMaplibreMap();
+          if (glMap.isStyleLoaded()) {
+            customizeStreetMap();
+          } else {
+            glMap.once("load", customizeStreetMap);
+          }
+        }
+      } else {
+        if (map.hasLayer(streetLayer)) {
+          map.removeLayer(streetLayer);
+        }
+        if (countriesLayer) {
+          countriesLayer.setStyle(overviewCountryStyle);
+          if (!map.hasLayer(countriesLayer)) {
+            countriesLayer.addTo(map);
+          }
+          countriesLayer.bringToBack();
+        }
+      }
+    }
+
+    const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=900&q=80";
+
+    function colorForRank(rankMin) {
+      if (!rankMin) return "#f97316";      // brak rankingu — pomarańczowy
+      if (rankMin <= 50) return "#7f1d1d"; // najlepsze — najciemniejsza czerwień
+      if (rankMin <= 100) return "#991b1b";
+      if (rankMin <= 200) return "#dc2626";
+      if (rankMin <= 500) return "#ea580c";
+      if (rankMin <= 850) return "#f97316";
+      return "#fb923c";
+    }
+
+    function makeRankIcon(rankMin) {
+      const color = colorForRank(rankMin);
+      return L.divIcon({
+        html: `<div class="university-dot" style="--rank-color:${color}"></div>`,
+        className: "university-dot-icon",
+        iconSize: [10, 10],
+        iconAnchor: [5, 5]
+      });
+    }
+
+    let allUniversityFeatures = [];
+    let renderedMarkers = L.layerGroup().addTo(map);
+
+    function markerSizeForCount(count) {
+      // Małe klastry: rozmiar nadal zależy od liczby uczelni, ale jest ok. 3 razy mniejszy niż wcześniej.
+      return count === 1 ? 10 : Math.max(14, Math.min(28, 10 + Math.sqrt(count) * 4));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function makeSingleMarkerIcon(rankMin, universityName, showLabel, enlarged) {
+      const color = colorForRank(rankMin);
+      const size = enlarged ? 14 : 7;
+      const iconSize = enlarged ? 14 : 10;
+      const label = showLabel
+        ? `<span class="university-label">${escapeHtml(universityName || "Uczelnia")}</span>`
+        : "";
+      return L.divIcon({
+        html: `<div class="university-dot" style="--rank-color:${color}; width:${size}px; height:${size}px;">${label}</div>`,
+        className: "university-dot-icon",
+        iconSize: [iconSize, iconSize],
+        iconAnchor: [iconSize / 2, iconSize / 2]
+      });
+    }
+
+    function makeClusterMarkerIcon(count, bestRank) {
+      const color = colorForRank(bestRank);
+      const size = markerSizeForCount(count);
+      const fontSize = count < 10 ? 9 : count < 100 ? 8 : 7;
+      return L.divIcon({
+        html: `<div class="university-cluster" style="--rank-color:${color}; --cluster-size:${size}px; --cluster-font-size:${fontSize}px;">${count}</div>`,
+        className: "university-cluster-icon",
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size / 2]
+      });
+    }
+
+    function getRankMin(feature) {
+      const raw = feature?.properties?.rank_min;
+      const num = Number(raw);
+      return Number.isFinite(num) ? num : null;
+    }
+
+    function getLatLng(feature) {
+      const coords = feature?.geometry?.coordinates || [];
+      const lng = Number(coords[0]);
+      const lat = Number(coords[1]);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+      return L.latLng(lat, lng);
+    }
+
+    function buildScreenClusters(features) {
+      const radius = map.getZoom() >= 8 ? 32 : 46;
+      const clusters = [];
+
+      features.forEach(feature => {
+        const latlng = getLatLng(feature);
+        if (!latlng) return;
+
+        const point = map.latLngToLayerPoint(latlng);
+        let target = null;
+
+        for (const cluster of clusters) {
+          if (point.distanceTo(cluster.point) <= radius) {
+            target = cluster;
+            break;
+          }
+        }
+
+        if (!target) {
+          clusters.push({
+            features: [feature],
+            latlng,
+            point,
+            bestRank: getRankMin(feature),
+            sumLat: latlng.lat,
+            sumLng: latlng.lng
+          });
+        } else {
+          target.features.push(feature);
+          target.sumLat += latlng.lat;
+          target.sumLng += latlng.lng;
+          target.latlng = L.latLng(
+            target.sumLat / target.features.length,
+            target.sumLng / target.features.length
+          );
+
+          const rank = getRankMin(feature);
+          if (rank !== null && (target.bestRank === null || rank < target.bestRank)) {
+            target.bestRank = rank;
+          }
+        }
+      });
+
+      return clusters;
+    }
+
+    function renderUniversities() {
+      renderedMarkers.clearLayers();
+
+      const clusters = buildScreenClusters(allUniversityFeatures);
+
+      clusters.forEach(cluster => {
+        if (cluster.features.length === 1 || map.getZoom() >= 12) {
+          cluster.features.forEach(feature => {
+            const latlng = getLatLng(feature);
+            const rankMin = getRankMin(feature);
+            const properties = feature.properties || {};
+            const marker = L.marker(latlng, {
+              icon: makeSingleMarkerIcon(
+                rankMin,
+                properties.name,
+                map.getZoom() >= UNIVERSITY_LABEL_ZOOM,
+                map.getZoom() >= STREET_MAP_ZOOM
+              ),
+              keyboard: false
+            });
+            marker.on("click", (e) => {
+              L.DomEvent.stopPropagation(e);
+              map.flyTo(latlng, Math.max(map.getZoom(), UNIVERSITY_FOCUS_ZOOM), {
+                animate: true,
+                duration: 0.8
+              });
+              openRightPanel(properties);
+            });
+            renderedMarkers.addLayer(marker);
+          });
+        } else {
+          const marker = L.marker(cluster.latlng, {
+            icon: makeClusterMarkerIcon(cluster.features.length, cluster.bestRank),
+            keyboard: false
+          });
+
+          marker.on("click", (e) => {
+            L.DomEvent.stopPropagation(e);
+            const bounds = L.latLngBounds(cluster.features.map(getLatLng).filter(Boolean));
+            if (bounds.isValid() && map.getZoom() < 12) {
+              map.fitBounds(bounds.pad(0.25), { maxZoom: map.getZoom() + 2 });
+            }
+          });
+
+          renderedMarkers.addLayer(marker);
+        }
+      });
+    }
+
+    function openRightPanel(properties) {
+      const panel = document.getElementById("rightPanel");
+      const img = document.querySelector(".panel-img");
+
+      img.src = properties.image_url || DEFAULT_IMAGE;
+      img.onerror = () => { img.src = DEFAULT_IMAGE; };
+
+      document.getElementById("panelTitle").textContent = properties.name || "Uczelnia";
+      document.getElementById("panelLocation").textContent = [properties.city, properties.country_pl || properties.country].filter(Boolean).join(", ");
+      document.getElementById("panelRank").textContent = properties.rank ? `Ranking: ${properties.rank}` : "Ranking: brak danych";
+      document.getElementById("panelDesc").textContent = properties.description || "Brak opisu w bazie danych.";
+      document.getElementById("panelLanguages").textContent = properties.teaching_languages_pl || properties.teaching_languages || "Brak danych";
+
+      const webEl = document.getElementById("panelWebsite");
+      if (properties.website) {
+        webEl.href = properties.website;
+        webEl.textContent = properties.website;
+        webEl.style.display = "inline";
+      } else {
+        webEl.removeAttribute("href");
+        webEl.textContent = "Brak strony internetowej";
+        webEl.style.display = "inline";
+      }
+
+      panel.classList.add("open");
+    }
+
+    function closeRightPanel() {
+      document.getElementById("rightPanel").classList.remove("open");
+    }
+
+    map.on("click", closeRightPanel);
+    map.on("zoomend", updateBaseMap);
+    map.on("zoomend moveend", () => {
+      if (allUniversityFeatures.length) renderUniversities();
+    });
+
+    const countryEl = document.getElementById("country");
+    const languageEl = document.getElementById("language");
+    const searchFieldEl = document.getElementById("searchField");
+    const countEl = document.getElementById("count");
+    const rankFromEl = document.getElementById("rankFrom");
+    const rankToEl = document.getElementById("rankTo");
+    const rankRangeEl = document.getElementById("rankRange");
+    const rankFromLabelEl = document.getElementById("rankFromLabel");
+    const rankToLabelEl = document.getElementById("rankToLabel");
+    const resetFiltersBtnEl = document.getElementById("resetFiltersBtn");
+    let rankBounds = { min: 1, max: 1400 };
+    let loadRequestId = 0;
+    let languageRequestId = 0;
+
+    countryEl.addEventListener("change", async () => {
+      await updateLanguages(countryEl.value);
+      loadData();
+    });
+    languageEl.addEventListener("change", loadData);
+    searchFieldEl.addEventListener("input", debounce(loadData, 400));
+    const debouncedRankLoad = debounce(loadData, 250);
+    [rankFromEl, rankToEl].forEach(el => {
+      el.addEventListener("input", event => {
+        updateRankRange(event.target.id);
+        debouncedRankLoad();
+      });
+    });
+    resetFiltersBtnEl.addEventListener("click", resetFilters);
+
+    function debounce(func, delay) {
+      let timer;
+      return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => func.apply(this, args), delay);
+      };
+    }
+
+    function buildUrl() {
+      const params = new URLSearchParams();
+      if (countryEl.value) params.set("country", countryEl.value);
+      if (languageEl.value) params.set("language", languageEl.value);
+      if (searchFieldEl.value.trim()) params.set("query", searchFieldEl.value.trim());
+      const rankFrom = Number(rankFromEl.value);
+      const rankTo = Number(rankToEl.value);
+      if (rankFrom > rankBounds.min) params.set("rank_from", rankFrom);
+      if (rankTo < rankBounds.max) params.set("rank_to", rankTo);
+      const qs = params.toString();
+      return `${API_BASE}/universities${qs ? "?" + qs : ""}`;
+    }
+
+    async function loadData() {
+      const requestId = ++loadRequestId;
+      try {
+        const url = buildUrl();
+        console.log("Pobieram uczelnie:", url);
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`API zwróciło HTTP ${res.status}`);
+        const data = await res.json();
+        if (requestId !== loadRequestId) return;
+
+        allUniversityFeatures = data.features || [];
+        renderUniversities();
+
+        const n = allUniversityFeatures.length;
+        countEl.textContent = `Liczba uniwersytetów: ${n}`;
+
+        if (n > 0) {
+          const points = allUniversityFeatures.map(getLatLng).filter(Boolean);
+          if (points.length === 1) {
+            map.setView(points[0], 7);
+          } else {
+            const bounds = L.latLngBounds(points);
+            if (bounds.isValid()) map.fitBounds(bounds.pad(0.15), { maxZoom: 8 });
+          }
+        }
+      } catch (e) {
+        if (requestId !== loadRequestId) return;
+        console.error("Błąd ładowania danych:", e);
+        countEl.textContent = "Nie udało się pobrać danych z API.";
+      }
+    }
+
+    function fillLanguages(languages) {
+      const selectedLanguage = languageEl.value;
+      languageEl.innerHTML = `<option value="">Wszystkie języki</option>`;
+
+      (languages || []).forEach(language => {
+        const opt = document.createElement("option");
+        opt.value = language.value;
+        opt.textContent = language.label;
+        languageEl.appendChild(opt);
+      });
+
+      const selectedStillExists = [...languageEl.options]
+        .some(option => option.value === selectedLanguage);
+      languageEl.value = selectedStillExists ? selectedLanguage : "";
+    }
+
+    async function updateLanguages(country) {
+      const requestId = ++languageRequestId;
+      try {
+        const params = new URLSearchParams();
+        if (country) params.set("country", country);
+        const query = params.toString();
+        const res = await fetch(`${API_BASE}/meta${query ? "?" + query : ""}`);
+        if (!res.ok) throw new Error(`API zwróciło HTTP ${res.status}`);
+        const meta = await res.json();
+        if (requestId !== languageRequestId) return;
+        fillLanguages(meta.languages);
+      } catch (e) {
+        if (requestId !== languageRequestId) return;
+        console.error("Błąd aktualizacji języków:", e);
+      }
+    }
+
+    function updateRankRange(changedId) {
+      let from = Number(rankFromEl.value);
+      let to = Number(rankToEl.value);
+
+      if (from > to) {
+        if (changedId === "rankFrom") {
+          to = from;
+          rankToEl.value = to;
+        } else {
+          from = to;
+          rankFromEl.value = from;
+        }
+      }
+
+      const span = Math.max(1, rankBounds.max - rankBounds.min);
+      const start = ((from - rankBounds.min) / span) * 100;
+      const end = ((to - rankBounds.min) / span) * 100;
+      rankRangeEl.style.setProperty("--range-start", `${start}%`);
+      rankRangeEl.style.setProperty("--range-end", `${end}%`);
+      rankFromLabelEl.textContent = `Od ${from}`;
+      rankToLabelEl.textContent = `Do ${to}`;
+    }
+
+    async function resetFilters() {
+      searchFieldEl.value = "";
+      countryEl.value = "";
+      languageEl.value = "";
+      rankFromEl.value = rankBounds.min;
+      rankToEl.value = rankBounds.max;
+      updateRankRange();
+      closeRightPanel();
+      await updateLanguages("");
+      loadData();
+    }
+
+    async function loadMeta() {
+      try {
+        const res = await fetch(`${API_BASE}/meta`);
+        if (!res.ok) throw new Error(`API zwróciło HTTP ${res.status}`);
+        const meta = await res.json();
+
+        countryEl.innerHTML = `<option value="">Wszystkie kraje</option>`;
+        (meta.countries || []).forEach(c => {
+          const opt = document.createElement("option");
+          opt.value = c.value;
+          opt.textContent = c.label;
+          countryEl.appendChild(opt);
+        });
+
+        fillLanguages(meta.languages);
+
+        rankBounds = {
+          min: Number(meta.rank_min) || 1,
+          max: Number(meta.rank_max) || 1400
+        };
+        rankFromEl.min = rankBounds.min;
+        rankFromEl.max = rankBounds.max;
+        rankFromEl.value = rankBounds.min;
+        rankToEl.min = rankBounds.min;
+        rankToEl.max = rankBounds.max;
+        rankToEl.value = rankBounds.max;
+        updateRankRange();
+      } catch (e) {
+        console.error("Błąd ładowania metadanych:", e);
+      }
+    }
+
+    loadMeta().finally(loadData);
+  </script>
+</body>
+</html>
