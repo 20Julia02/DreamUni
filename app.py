@@ -10,9 +10,9 @@ CORS(app)
 DB_CONFIG = {
     "host": "localhost",
     "port": 5432,
-    "dbname": "university_map",
+    "dbname": "dreamuni",
     "user": "postgres",
-    "password": "1234",
+    "password": "Stanska",
 }
 
 DEFAULT_IMAGE = "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=900&q=80"
@@ -338,6 +338,56 @@ def debug_universities_columns():
 
     return jsonify(rows)
 
+
+@app.get("/partners")
+def partners():
+    """
+    Zwraca partnerów dla danego kraju + globalnych (country = NULL).
+    """
+    country = request.args.get("country", type=str)
+
+    sql = """
+        SELECT id, name, category, icon, url, description
+        FROM partners
+        WHERE country = %(country)s OR country IS NULL
+        ORDER BY country NULLS LAST, category, name;
+    """
+
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(sql, {"country": country})
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    return jsonify([dict(r) for r in rows])
+
+
+@app.get("/dormitories")
+def dormitories():
+    """
+    Zwraca akademiki dla danej uczelni.
+    """
+    university_id = request.args.get("university_id", type=int)
+    if not university_id:
+        return jsonify([])
+
+    sql = """
+        SELECT id, name, latitude, longitude
+        FROM dormitories
+        WHERE university_id = %(uid)s;
+    """
+
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(sql, {"uid": university_id})
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    return jsonify([dict(r) for r in rows])
 
 if __name__ == "__main__":
     app.run(debug=True)
