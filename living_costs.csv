@@ -1,0 +1,248 @@
+cost_city,costs_country,rent_1br_pln,food_monthly_pln,utilities_monthly_pln,transport_monthly_pln,total_monthly_pln,avg_salary_pln,rent_to_salary_pct,data_source
+dane krajowe (Eurostat 2020),France,3402,1683,,220,5305,,,eurostat_country
+dane krajowe (Eurostat 2020),Czech Republic,2000,954,280,110,3344,,,eurostat_country
+dane krajowe (Eurostat 2020),Luxembourg,8546,2295,480,0,11321,,,eurostat_country
+dane krajowe (Eurostat 2020),Finland,4388,1962,420,200,6970,,,eurostat_country
+dane krajowe (Eurostat 2020),Netherlands,4460,1683,400,350,6893,,,eurostat_country
+Milan,Italy,3852,2617,387,182,7348,8409,45.8,numbeo_city
+Brasov,Romania,1336,961,223,81,2802,3143,42.5,numbeo_city
+Naples,Italy,1792,1870,271,178,4410,6248,28.7,numbeo_city
+Aberdeen,United Kingdom,2400,2216,251,378,5609,12136,19.8,numbeo_city
+Bonn,Germany,2742,2057,506,514,6217,10132,27.1,numbeo_city
+Vienna,Austria,3109,1963,384,164,6044,11980,25.9,numbeo_city
+Trento,Italy,2454,1916,295,153,5123,7788,31.5,numbeo_city
+Padova,Italy,2016,1963,390,182,4844,6992,28.8,numbeo_city
+Modena,Italy,2337,1963,360,147,5092,7742,30.2,numbeo_city
+Moscow,Russia,3033,1769,271,177,5514,6661,45.5,numbeo_city
+York,United Kingdom,3780,1945,357,311,6786,16175,23.4,numbeo_city
+Ljubljana,Slovenia,2517,1309,443,173,4756,6158,40.9,numbeo_city
+Tromso,Norway,3772,2529,297,226,7361,15855,23.8,numbeo_city
+Reykjavik,Iceland,5583,2542,182,270,9183,14992,37.2,numbeo_city
+Nijmegen,Netherlands,3739,2057,334,631,7175,13243,28.2,numbeo_city
+Chania,Greece,1811,1636,253,234,4321,3652,49.6,numbeo_city
+Southampton,United Kingdom,3902,1835,498,311,7017,11900,32.8,numbeo_city
+Lyon,France,2700,1963,327,309,5720,12040,22.4,numbeo_city
+Sofia,Bulgaria,1485,1290,242,119,3352,4485,33.1,numbeo_city
+A Coruna,Spain,2283,1435,277,152,4477,6661,34.3,numbeo_city
+Stuttgart,Germany,3827,1682,425,337,6683,14761,25.9,numbeo_city
+Szeged,Hungary,988,771,247,92,2254,3212,30.7,numbeo_city
+Perm,Russia,976,1253,182,74,2683,2999,32.6,numbeo_city
+Athens,Greece,2043,1589,470,140,4612,4191,48.7,numbeo_city
+Murcia,Spain,2882,1589,229,117,5106,5954,48.4,numbeo_city
+Budapest,Hungary,1658,1059,268,109,3285,4236,39.1,numbeo_city
+Fribourg,Switzerland,3170,3091,519,323,7669,21269,14.9,numbeo_city
+Edinburgh,United Kingdom,3948,2270,361,324,7311,12136,32.5,numbeo_city
+Debrecen,Hungary,1151,852,196,85,2440,3169,36.3,numbeo_city
+Tampere,Finland,2812,1916,169,262,5570,11312,24.9,numbeo_city
+Pavia,Italy,2103,1589,424,164,4551,5796,36.3,numbeo_city
+Genoa,Italy,2178,1963,269,215,4921,6269,34.7,numbeo_city
+Rotterdam,Netherlands,4612,2103,420,374,7972,14050,32.8,numbeo_city
+Olsztyn,Poland,1450,799,372,80,2885,3532,41.0,numbeo_city
+Uppsala,Sweden,2545,1715,175,416,5290,11054,23.0,numbeo_city
+Marseille,France,2493,1729,258,234,5089,11515,21.6,numbeo_city
+Miskolc,Hungary,997,851,234,89,2325,2925,34.1,numbeo_city
+Salamanca,Spain,2088,1607,281,103,4378,7089,29.5,numbeo_city
+Pecs,Hungary,863,851,202,106,2200,2856,30.2,numbeo_city
+Riga,Latvia,1505,1402,541,234,3973,4763,31.6,numbeo_city
+Helsinki,Finland,3735,1963,191,304,6626,12755,29.3,numbeo_city
+London,United Kingdom,7511,2346,519,811,11665,17576,42.7,numbeo_city
+Linkoping,Sweden,2751,1629,103,268,5227,12282,22.4,numbeo_city
+Brighton,United Kingdom,5152,2270,445,442,8770,12049,42.8,numbeo_city
+Rijeka,Croatia,1467,1207,280,186,3346,3939,37.2,numbeo_city
+Rome,Italy,3229,2103,350,164,6127,6971,46.3,numbeo_city
+Kyiv,Ukraine,1316,847,168,43,2489,2314,56.9,numbeo_city
+Munster,Germany,2820,1356,476,321,5312,8351,33.8,numbeo_city
+Geneva,Switzerland,7611,3519,354,333,12457,26067,29.2,numbeo_city
+Kiel,Germany,2169,1477,399,285,4738,10984,19.7,numbeo_city
+Leiden,Netherlands,4966,1963,315,234,7959,14412,34.5,numbeo_city
+Sheffield,United Kingdom,2958,1729,414,400,5924,9957,29.7,numbeo_city
+Veszprem,Hungary,1294,689,218,68,2423,3429,37.8,numbeo_city
+Granada,Spain,2103,1402,202,187,4222,8267,25.4,numbeo_city
+Lugano,Switzerland,6271,3804,327,380,11388,24163,26.0,numbeo_city
+Cambridge,United Kingdom,5294,2270,456,314,8783,14613,36.2,numbeo_city
+Ioannina,Greece,1270,1216,431,164,3434,3225,39.4,numbeo_city
+Braga,Portugal,2016,1028,182,122,3628,4545,44.3,numbeo_city
+Torun,Poland,1200,889,453,84,2842,3900,30.8,numbeo_city
+Bergen,Norway,3778,2443,474,342,7590,14170,26.7,numbeo_city
+Liege,Belgium,2454,1916,420,176,5416,9593,25.6,numbeo_city
+Catania,Italy,1558,1589,315,140,3892,4908,31.7,numbeo_city
+Kazan,Russia,1345,1080,189,140,2943,2971,45.3,numbeo_city
+Portsmouth,United Kingdom,3277,1902,256,338,6148,13648,24.0,numbeo_city
+Stockholm,Sweden,4573,1800,177,416,7419,13418,34.1,numbeo_city
+Klagenfurt,Austria,2407,1589,603,201,5220,7728,31.1,numbeo_city
+Sarajevo,Bosnia And Herzegovina,852,715,278,126,2198,3352,25.4,numbeo_city
+Tilburg,Netherlands,4157,1823,440,584,7418,9777,42.5,numbeo_city
+Belgrade,Serbia,1790,1003,266,130,3427,2963,60.4,numbeo_city
+Tarragona,Spain,2337,1426,328,199,4641,9148,25.5,numbeo_city
+Eindhoven,Netherlands,4414,2103,374,467,7791,15803,27.9,numbeo_city
+Florence,Italy,2892,1963,403,164,5706,6620,43.7,numbeo_city
+Leicester,United Kingdom,3088,2000,397,292,6208,11598,26.6,numbeo_city
+Plymouth,United Kingdom,3108,1838,455,297,6091,8108,38.3,numbeo_city
+Preston,United Kingdom,2230,1479,336,265,4766,14414,15.5,numbeo_city
+Oslo,Norway,5148,2787,431,368,9304,16055,32.1,numbeo_city
+Aachen,Germany,1969,1402,443,327,4499,12527,15.7,numbeo_city
+Karlsruhe,Germany,2892,1566,422,313,5591,12836,22.5,numbeo_city
+Bari,Italy,2629,1870,312,171,5256,6777,38.8,numbeo_city
+Faro,Portugal,2921,1262,127,187,4813,5050,57.9,numbeo_city
+Zurich,Switzerland,7226,3519,449,428,12293,29567,24.4,numbeo_city
+Kaunas,Lithuania,1493,1168,300,131,3349,5084,29.4,numbeo_city
+Heidelberg,Germany,3263,1940,511,374,6521,13815,23.6,numbeo_city
+Leeds,United Kingdom,3181,1837,517,405,6387,11820,26.9,numbeo_city
+Gyor,Hungary,1112,690,181,95,2256,3583,31.0,numbeo_city
+Saarbrucken,Germany,2181,1618,660,292,5161,11918,18.3,numbeo_city
+Birmingham,United Kingdom,3335,1702,386,324,6152,13082,25.5,numbeo_city
+Split,Croatia,1602,1176,204,180,3410,4246,37.7,numbeo_city
+Nice,France,3278,2361,344,197,6631,11152,29.4,numbeo_city
+Udine,Italy,1589,1710,283,150,4004,7000,22.7,numbeo_city
+Bremen,Germany,2237,1589,394,317,4939,10205,21.9,numbeo_city
+Nizhniy Novgorod,Russia,1224,1289,275,147,3128,3152,38.8,numbeo_city
+Yekaterinburg,Russia,1420,1238,222,151,3253,4987,28.5,numbeo_city
+Cork,Ireland,5251,2103,308,379,8538,12994,40.4,numbeo_city
+Montpellier,France,2701,1776,257,140,5275,13279,20.3,numbeo_city
+Maribor,Slovenia,1653,1070,387,136,3543,5837,28.3,numbeo_city
+Iasi,Romania,1204,913,204,95,2585,3052,39.4,numbeo_city
+Voronezh,Russia,960,1474,216,111,2959,3069,31.3,numbeo_city
+Thessaloniki,Greece,1599,1403,440,140,3943,3706,43.2,numbeo_city
+Grenoble,France,2244,1682,298,280,4879,9115,24.6,numbeo_city
+Zilina,Slovakia,1800,888,375,93,3407,4887,36.8,numbeo_city
+Groningen,Netherlands,3004,2150,468,421,6504,9460,31.8,numbeo_city
+Maastricht,Netherlands,4253,1916,582,234,7424,13633,31.2,numbeo_city
+Stoke-on-Trent,United Kingdom,2324,1756,476,365,5374,10420,22.3,numbeo_city
+Bern,Switzerland,4481,3329,365,376,9199,27645,16.2,numbeo_city
+Oviedo,Spain,1928,1472,236,187,4152,9124,21.1,numbeo_city
+Jena,Germany,1718,1215,564,293,4189,12328,13.9,numbeo_city
+Ancona,Italy,1987,1963,294,164,4692,6674,29.8,numbeo_city
+Bath,United Kingdom,4324,2244,522,405,7991,14774,29.3,numbeo_city
+Toulouse,France,2471,2080,328,252,5501,12074,20.5,numbeo_city
+Mainz,Germany,3213,1127,613,374,5770,13711,23.4,numbeo_city
+Munich,Germany,4847,1963,544,276,8071,15460,31.4,numbeo_city
+Newport,United Kingdom,2838,1810,432,270,5740,10420,27.2,numbeo_city
+Krasnoyarsk,Russia,1228,1069,183,111,2786,3390,36.2,numbeo_city
+Malmo,Sweden,2840,1544,135,244,5220,12207,23.3,numbeo_city
+Coventry,United Kingdom,3264,1513,548,270,6038,15405,21.2,numbeo_city
+Timisoara,Romania,1292,875,246,95,2695,3520,36.7,numbeo_city
+Sevilla,Spain,2089,1309,215,164,4088,6946,30.1,numbeo_city
+Katowice,Poland,1644,899,405,154,3318,4624,35.5,numbeo_city
+Bergamo,Italy,2512,1986,450,187,5432,7673,32.7,numbeo_city
+Vigo,Spain,1948,1370,201,210,4050,6139,31.7,numbeo_city
+Brescia,Italy,2025,1869,410,164,4792,6865,29.5,numbeo_city
+Coimbra,Portugal,1776,1052,178,140,3433,3973,44.7,numbeo_city
+Wroclaw,Poland,2235,1000,369,110,3939,4570,48.9,numbeo_city
+Pisa,Italy,2512,1682,383,150,5004,6310,39.8,numbeo_city
+Chelyabinsk,Russia,958,1474,259,127,2987,2225,43.1,numbeo_city
+Novosibirsk,Russia,1385,1327,197,181,3307,3016,45.9,numbeo_city
+Odense,Denmark,2835,2828,332,314,6857,13049,21.7,numbeo_city
+Aalborg,Denmark,2409,2451,360,251,5977,15289,15.8,numbeo_city
+Amsterdam,Netherlands,6807,2478,499,467,10753,16227,41.9,numbeo_city
+Antwerp,Belgium,3124,2384,370,229,6600,11134,28.1,numbeo_city
+Zagreb,Croatia,1882,1281,354,223,3995,5036,37.4,numbeo_city
+Suceava,Romania,951,722,148,76,2046,2966,32.1,numbeo_city
+Liverpool,United Kingdom,2939,2325,385,376,6460,9947,29.5,numbeo_city
+Leuven,Belgium,3250,2150,354,171,6378,11247,28.9,numbeo_city
+Krasnodar,Russia,1200,1864,243,103,3617,2911,41.2,numbeo_city
+Dundee,United Kingdom,2419,1837,294,270,5255,10216,23.7,numbeo_city
+Braunschweig,Germany,1854,1309,489,313,4407,14539,12.8,numbeo_city
+Bristol,United Kingdom,4633,2243,460,451,8260,12533,37.0,numbeo_city
+Exeter,United Kingdom,3568,1891,410,322,6626,10540,33.8,numbeo_city
+Derby,United Kingdom,2776,2162,464,314,6103,12680,21.9,numbeo_city
+Minsk,Belarus,1318,1284,106,87,2980,2465,53.5,numbeo_city
+Turku,Finland,2654,2103,268,257,5682,11814,22.5,numbeo_city
+Dublin,Ireland,7824,2431,416,561,11779,14093,55.5,numbeo_city
+Bologna,Italy,2744,2220,407,166,5826,7149,38.4,numbeo_city
+Alicante,Spain,2571,1631,243,164,4906,6626,38.8,numbeo_city
+Regensburg,Germany,3272,1519,249,241,5739,11997,27.3,numbeo_city
+Lisbon,Portugal,3608,1589,229,187,5926,4950,72.9,numbeo_city
+Valencia,Spain,2664,1542,250,147,4918,6909,38.6,numbeo_city
+Gdansk,Poland,2386,899,382,100,3982,5025,47.5,numbeo_city
+Warsaw,Poland,2667,1100,362,110,4491,5655,47.2,numbeo_city
+Innsbruck,Austria,3360,2010,422,243,6473,8872,37.9,numbeo_city
+Gliwice,Poland,1733,779,378,99,3199,4299,40.3,numbeo_city
+Bucharest,Romania,1499,1331,211,76,3335,4202,35.7,numbeo_city
+Milton Keynes,United Kingdom,4662,2141,410,341,8014,14686,31.7,numbeo_city
+Dortmund,Germany,1714,1589,524,327,4594,11739,14.6,numbeo_city
+Wurzburg,Germany,2445,1411,578,270,5077,9816,24.9,numbeo_city
+Bournemouth,United Kingdom,4099,2810,289,330,7958,10338,39.7,numbeo_city
+Oradea,Romania,863,1046,136,76,2297,2368,36.4,numbeo_city
+Strasbourg,France,2629,1963,332,248,5578,11972,22.0,numbeo_city
+Basel,Switzerland,5403,3519,511,380,10485,27670,19.5,numbeo_city
+Huddersfield,United Kingdom,2432,1675,312,297,5053,10811,22.5,numbeo_city
+Kaliningrad,Russia,1441,1245,216,111,3216,2720,53.0,numbeo_city
+Samara,Russia,1159,1327,196,146,3027,2959,39.2,numbeo_city
+Canterbury,United Kingdom,3153,1945,588,505,6657,11759,26.8,numbeo_city
+Lodz,Poland,1782,799,343,126,3285,4076,43.7,numbeo_city
+Leon,Spain,1792,1472,237,105,3920,9021,19.9,numbeo_city
+Espoo,Finland,3873,2337,192,290,7115,13493,28.7,numbeo_city
+Trondheim,Norway,3981,2669,286,389,7912,17535,22.7,numbeo_city
+Patra,Greece,1089,1262,304,234,3250,3174,34.3,numbeo_city
+Frankfurt,Germany,4025,1799,609,435,7301,15020,26.8,numbeo_city
+Bilbao,Spain,3622,1706,234,187,6053,8647,41.9,numbeo_city
+Vladivostok,Russia,2227,1179,280,74,3989,3574,62.3,numbeo_city
+Lausanne,Switzerland,6017,3424,546,352,11025,24037,25.0,numbeo_city
+Parma,Italy,2103,2057,337,164,4965,6944,30.3,numbeo_city
+Gothenburg,Sweden,3379,1543,207,349,5908,12480,27.1,numbeo_city
+Delft,Netherlands,2945,1402,413,243,5447,13423,21.9,numbeo_city
+Nuremberg,Germany,2133,1379,432,374,4722,13526,15.8,numbeo_city
+Wolverhampton,United Kingdom,2883,1864,343,519,6133,8378,34.4,numbeo_city
+Hannover,Germany,2355,1449,410,327,4945,11817,19.9,numbeo_city
+Brussels,Belgium,3619,2057,372,234,6771,12314,29.4,numbeo_city
+Siena,Italy,3038,2010,577,171,6078,6684,45.5,numbeo_city
+Lublin,Poland,1930,800,293,119,3337,3833,50.4,numbeo_city
+Trieste,Italy,2466,2057,371,167,5371,7079,34.8,numbeo_city
+Graz,Austria,2435,1543,443,253,5123,10311,23.6,numbeo_city
+Oxford,United Kingdom,5162,1891,353,358,8184,14504,35.6,numbeo_city
+Copenhagen,Denmark,5754,2765,362,339,9801,16182,35.6,numbeo_city
+Aarhus,Denmark,2973,2703,322,251,6760,15370,19.3,numbeo_city
+Reading,United Kingdom,4616,2810,398,324,8552,12290,37.6,numbeo_city
+Barcelona,Spain,3781,1869,303,187,6507,8659,43.7,numbeo_city
+Linz,Austria,2705,1916,377,234,5669,9856,27.4,numbeo_city
+Pescara,Italy,2025,2244,364,161,5078,5943,34.1,numbeo_city
+Luton,United Kingdom,3536,1729,422,364,6542,9549,37.0,numbeo_city
+Gottingen,Germany,2010,1402,451,244,4466,12321,16.3,numbeo_city
+Nottingham,United Kingdom,2868,1837,243,324,5714,10562,27.2,numbeo_city
+Cologne,Germany,3067,1682,498,444,6085,11002,27.9,numbeo_city
+Venice,Italy,2804,2057,502,173,5871,7245,38.7,numbeo_city
+Enschede,Netherlands,3713,1963,364,271,6755,14085,26.4,numbeo_city
+Novi Sad,Serbia,1274,741,258,100,2575,2720,46.8,numbeo_city
+Tomsk,Russia,1181,958,221,136,2699,2927,40.3,numbeo_city
+Hamburg,Germany,3747,1823,510,430,6975,14075,26.6,numbeo_city
+Berlin,Germany,4290,1682,545,397,7356,13889,30.9,numbeo_city
+Poznan,Poland,1928,899,231,120,3407,4306,44.8,numbeo_city
+Porto,Portugal,2765,1215,212,187,4683,4579,60.4,numbeo_city
+Norwich,United Kingdom,3649,2379,317,350,7087,10403,35.1,numbeo_city
+Kingston upon Hull,United Kingdom,2185,1573,327,306,4828,8018,27.3,numbeo_city
+Manchester,United Kingdom,3585,2270,443,395,7104,12319,29.1,numbeo_city
+Turin,Italy,1949,1706,339,178,4450,7230,27.0,numbeo_city
+Madrid,Spain,3724,1589,295,255,6213,9102,40.9,numbeo_city
+Aveiro,Portugal,2298,935,190,140,3854,3783,60.7,numbeo_city
+Dresden,Germany,2064,1356,442,297,4536,11442,18.0,numbeo_city
+Valletta,Malta,3710,2431,282,122,7059,5255,70.6,numbeo_city
+Kharkiv,Ukraine,952,581,185,27,1845,1789,53.2,numbeo_city
+Darmstadt,Germany,3064,2290,411,304,6493,13820,22.2,numbeo_city
+Palermo,Italy,1636,1402,360,171,3859,5921,27.6,numbeo_city
+Belfast,United Kingdom,3129,2324,244,297,6441,10255,30.5,numbeo_city
+Tyumen,Russia,1308,1224,184,128,3052,3517,37.2,numbeo_city
+Paris,France,4402,1963,356,351,7492,12335,35.7,numbeo_city
+Verona,Italy,2415,1870,289,173,5036,7218,33.5,numbeo_city
+Mannheim,Germany,2239,1590,487,351,5063,13399,16.7,numbeo_city
+Glasgow,United Kingdom,3267,2270,396,432,6788,13084,25.0,numbeo_city
+Oulu,Finland,2314,1701,184,245,4885,11882,19.5,numbeo_city
+Lviv,Ukraine,1167,584,124,28,2016,2036,57.3,numbeo_city
+Valladolid,Spain,1753,1309,200,206,3763,7346,23.9,numbeo_city
+Middlesbrough,United Kingdom,2471,1540,584,338,5407,12432,19.9,numbeo_city
+Ulm,Germany,3622,1636,442,290,6378,14548,24.9,numbeo_city
+Salzburg,Austria,3568,1916,501,187,6577,10923,32.7,numbeo_city
+Kosice,Slovakia,2064,855,454,117,3748,4253,48.5,numbeo_city
+Stavanger,Norway,3534,2624,386,271,7451,14692,24.1,numbeo_city
+Guildford,United Kingdom,5360,2270,456,343,8855,17010,31.5,numbeo_city
+Gent,Belgium,3380,2174,338,229,6580,9725,34.8,numbeo_city
+Cluj-Napoca,Romania,1416,1008,260,88,2961,3876,36.5,numbeo_city
+Freiburg im Breisgau,Germany,3140,1636,494,299,5982,12067,26.0,numbeo_city
+Nantes,France,2413,1776,312,257,5131,10081,23.9,numbeo_city
+Lecce,Italy,2045,1870,186,164,4539,5648,36.2,numbeo_city
+Utrecht,Netherlands,4835,2150,457,421,8329,14479,33.4,numbeo_city
+Bratislava,Slovakia,2277,1169,384,140,4252,5675,40.1,numbeo_city
+Limerick,Ireland,4285,2057,291,312,7465,13638,31.4,numbeo_city
+Bradford,United Kingdom,2368,1513,274,310,4843,8378,28.3,numbeo_city
+Chelmsford,United Kingdom,4257,2379,351,463,7887,11733,36.3,numbeo_city
+Vilnius,Lithuania,2368,1356,351,136,4480,5676,41.7,numbeo_city
+Bordeaux,France,2834,1986,287,187,5735,11020,25.7,numbeo_city
