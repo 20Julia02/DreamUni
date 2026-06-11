@@ -94,6 +94,37 @@
     .search-container {
       position: relative;
     }
+    .search-autocomplete {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: var(--input-bg);
+      border: 1px solid var(--accent-orange);
+      border-radius: 8px;
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 9999;
+      display: none;
+    }
+    .search-autocomplete.open { display: block; }
+    .search-autocomplete-item {
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 1px solid #2e2e2e;
+      color: var(--text-main);
+    }
+    .search-autocomplete-item:last-child { border-bottom: none; }
+    .search-autocomplete-item:hover,
+    .search-autocomplete-item.active {
+      background: #2a2a2a;
+      color: var(--accent-orange);
+    }
+    .search-autocomplete-item em {
+      font-style: normal;
+      color: var(--accent-orange);
+      font-weight: 600;
+    }
     .search-container input[type="text"] {
       width: 100%;
       padding: 10px 12px 10px 36px;
@@ -226,6 +257,44 @@
     .range-labels .active-val {
       color: var(--accent-orange);
       font-weight: bold;
+    }
+
+    .cost-slider {
+      margin-bottom: 10px;
+    }
+    .cost-slider-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+    .cost-slider-head .cost-value {
+      color: var(--accent-orange);
+      font-weight: 600;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .cost-slider input[type="range"] {
+      width: 100%;
+      margin: 0;
+      accent-color: var(--accent-orange);
+      cursor: pointer;
+    }
+    .cost-slider--main {
+      background: #1e1e1e;
+      border: 1px solid var(--accent-orange);
+      border-radius: 8px;
+      padding: 10px 12px 8px;
+      margin-bottom: 4px;
+    }
+    .cost-slider--main .cost-slider-head span:first-child {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+    .cost-slider--main .cost-value {
+      font-size: 13px;
     }
     
     .btn-submit { 
@@ -574,6 +643,23 @@
         0 0 0 calc(var(--cluster-size) * 0.3) color-mix(in srgb, var(--rank-color) 24%, transparent)
     }
 
+    .dormitory-icon {
+      background: transparent;
+      border: none;
+    }
+    .dormitory-dot {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      background: #f5a623;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      box-shadow: 0 0 6px rgba(245,166,35,0.6);
+    }
+
     .leaflet-marker-icon.university-dot-icon,
     .leaflet-marker-icon.university-cluster-icon {
       transition: transform 0.15s ease, filter 0.15s ease;
@@ -599,7 +685,8 @@
 
         <label for="searchField">Wyszukaj uczelnię</label>
         <div class="search-container">
-          <input type="text" id="searchField" placeholder="Szukaj">
+          <input type="text" id="searchField" placeholder="Szukaj" autocomplete="off">
+          <div class="search-autocomplete" id="searchAutocomplete"></div>
         </div>
 
         <label for="country">Wybierz kraj</label>
@@ -622,6 +709,48 @@
             <span id="rankFromLabel">Od 1</span>
             <span id="rankToLabel">Do 1400</span>
           </div>
+        </div>
+
+        <label style="margin-top:14px;">Koszty życia (zł / mies.)</label>
+
+        <div class="cost-slider cost-slider--main">
+          <div class="cost-slider-head">
+            <span>Budżet łącznie</span>
+            <span class="cost-value" id="costTotalVal">bez limitu</span>
+          </div>
+          <input type="range" id="costTotal" min="0" max="13000" step="50" value="13000" aria-label="Maksymalny budżet miesięczny">
+        </div>
+
+        <div class="cost-slider" style="margin-top:10px;">
+          <div class="cost-slider-head">
+            <span>Mieszkanie (1 pok.)</span>
+            <span class="cost-value" id="costRentVal">bez limitu</span>
+          </div>
+          <input type="range" id="costRent" min="0" max="8000" step="50" value="8000" aria-label="Maksymalny czynsz">
+        </div>
+
+        <div class="cost-slider">
+          <div class="cost-slider-head">
+            <span>Jedzenie</span>
+            <span class="cost-value" id="costFoodVal">bez limitu</span>
+          </div>
+          <input type="range" id="costFood" min="0" max="3000" step="50" value="3000" aria-label="Maksymalne koszty jedzenia">
+        </div>
+
+        <div class="cost-slider">
+          <div class="cost-slider-head">
+            <span>Media</span>
+            <span class="cost-value" id="costUtilitiesVal">bez limitu</span>
+          </div>
+          <input type="range" id="costUtilities" min="0" max="2000" step="50" value="2000" aria-label="Maksymalne koszty mediów">
+        </div>
+
+        <div class="cost-slider">
+          <div class="cost-slider-head">
+            <span>Transport</span>
+            <span class="cost-value" id="costTransportVal">bez limitu</span>
+          </div>
+          <input type="range" id="costTransport" min="0" max="1500" step="50" value="1500" aria-label="Maksymalne koszty transportu">
         </div>
 
         <button id="resetFiltersBtn" class="btn-reset" type="button">Resetuj filtry</button>
@@ -665,15 +794,26 @@
 
         <hr class="panel-divider">
 
+        <div class="panel-section-title">Koszty życia (zł / mies.)</div>
+        <div id="panelCosts" style="font-size:13px; line-height:1.8;">Brak danych</div>
+
+        <hr class="panel-divider">
+
         <div class="panel-section-title">Strona internetowa</div>
         <div style="display:flex; align-items:center; gap:8px;">
           <span style="color:var(--text-muted)">🌐</span>
           <a href="#" id="panelWebsite" target="_blank" class="panel-link">https://www.ox.ac.uk/</a>
         </div>
 
+        <hr class="panel-divider">
+
+        <div class="panel-section-title">Oferty partnerów</div>
+        <div id="partnersContainer">
+          <div style="color:var(--text-muted); font-size:13px;">Ładowanie...</div>
+        </div>
+
       </div>
     </div>
-  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -684,6 +824,7 @@
     const STREET_MAP_ZOOM = 9;
     const UNIVERSITY_FOCUS_ZOOM = 15;
     const UNIVERSITY_LABEL_ZOOM = 14;
+    
 
     const map = L.map("map").setView([51, 12], 4);
     let countriesLayer = null;
@@ -699,6 +840,8 @@
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://openfreemap.org/">OpenFreeMap</a>'
     });
+    let dormitoryMarkers = L.layerGroup().addTo(map);
+
     function customizeStreetMap() {
       const glMap = streetLayer.getMaplibreMap();
       const setPaint = (layerId, property, value) => {
@@ -989,6 +1132,76 @@
       });
     }
 
+    function loadDormitories(universityId) {
+      dormitoryMarkers.clearLayers();
+      if (!universityId) return;
+
+      fetch(`${API_BASE}/dormitories?university_id=${universityId}`)
+        .then(r => r.json())
+        .then(dorms => {
+          dorms.forEach(d => {
+            // Wstrzykujemy podpis bezpośrednio do HTML ikony, identycznie jak przy uczelniach
+            const label = `<span class="university-label">${escapeHtml(d.name || "Akademik")}</span>`;
+            
+            const icon = L.divIcon({
+              html: `<div class="dormitory-dot"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>${label}</div>`,
+              className: "dormitory-icon",
+              iconSize: [20, 20],
+              iconAnchor: [10, 10]
+            });
+            
+            L.marker([d.latitude, d.longitude], { icon })
+              .addTo(dormitoryMarkers);
+          });
+        })
+        .catch(e => console.error("Błąd ładowania akademików:", e));
+    }
+    
+
+    function loadPartners(country) {
+      const container = document.getElementById("partnersContainer");
+      container.innerHTML = `<div style="color:var(--text-muted); font-size:13px;">Ładowanie...</div>`;
+      if (!country) return;
+
+      const categoryIcons = {
+        'Konto walutowe': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`,
+        'Ubezpieczenie':  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+        'Zakwaterowanie': `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+        'Przeprowadzka':  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+        'Siłownia':       `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11M6.5 17.5h11M3 10h18M3 14h18"/></svg>`
+      };
+
+      const defaultIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+
+      fetch(`${API_BASE}/partners?country=${encodeURIComponent(country)}`)
+        .then(r => r.json())
+        .then(partnersList => {
+          if (partnersList.length === 0) {
+            container.innerHTML = `<div style="color:var(--text-muted); font-size:13px;">Brak ofert dla tego kraju.</div>`;
+            return;
+          }
+          container.innerHTML = partnersList.map(p => `
+            <a href="${p.url || '#'}" target="_blank" style="text-decoration:none; color:inherit;">
+              <div class="partner-card">
+                <div class="partner-info">
+                  <div class="partner-icon" style="color:var(--text-muted);">
+                    ${categoryIcons[p.category] || defaultIcon}
+                  </div>
+                  <div>
+                    <div class="partner-name">${p.name}</div>
+                    <div class="partner-type">${p.category}</div>
+                  </div>
+                </div>
+                <div class="partner-distance" style="color:var(--accent-orange); font-size:11px; white-space:nowrap;">
+                  ${p.country ?? 'globalny'}
+                </div>
+              </div>
+            </a>
+          `).join('');
+        })
+        .catch(e => console.error("Błąd ładowania partnerów:", e));
+    }
+
     function openRightPanel(properties) {
       const panel = document.getElementById("rightPanel");
       const img = document.querySelector(".panel-img");
@@ -1001,6 +1214,7 @@
       document.getElementById("panelRank").textContent = properties.rank ? `Ranking: ${properties.rank}` : "Ranking: brak danych";
       document.getElementById("panelDesc").textContent = properties.description || "Brak opisu w bazie danych.";
       document.getElementById("panelLanguages").textContent = properties.teaching_languages_pl || properties.teaching_languages || "Brak danych";
+      renderPanelCosts(properties);
 
       const webEl = document.getElementById("panelWebsite");
       if (properties.website) {
@@ -1012,12 +1226,82 @@
         webEl.textContent = "Brak strony internetowej";
         webEl.style.display = "inline";
       }
+      loadDormitories(properties.id);
+      loadPartners(properties.country);
 
       panel.classList.add("open");
     }
 
     function closeRightPanel() {
       document.getElementById("rightPanel").classList.remove("open");
+      dormitoryMarkers.clearLayers();
+    }
+
+    function renderPanelCosts(properties) {
+      const el = document.getElementById("panelCosts");
+      const fmt = v => `${Number(v).toLocaleString("pl-PL")} zł`;
+
+      if (properties.total_monthly_pln == null) {
+        el.innerHTML = `<span style="color:var(--text-muted)">Brak danych o kosztach życia dla tego miasta</span>`;
+        return;
+      }
+
+      const rows = [
+        ["Mieszkanie (1 pok.)", properties.rent_1br_pln, false],
+        ["Jedzenie", properties.food_monthly_pln, false],
+        ["Media", properties.utilities_monthly_pln, false],
+        ["Transport", properties.transport_monthly_pln, false],
+        ["Budżet łącznie", properties.total_monthly_pln, true],
+      ];
+
+      const source = properties.costs_source === "eurostat_country"
+        ? "średnia krajowa — Eurostat 2020"
+        : `${properties.cost_city || "miasto"} — Numbeo 2022`;
+
+      el.innerHTML = rows
+        .filter(([, v]) => v != null)
+        .map(([label, v, strong]) => {
+          const style = strong
+            ? "font-weight:700; color:var(--accent-orange); border-top:1px solid #3a3a3a; padding-top:5px; margin-top:5px;"
+            : "";
+          return `<div style="display:flex; justify-content:space-between; ${style}"><span>${label}</span><span>${fmt(v)}</span></div>`;
+        })
+        .join("");
+    }
+
+    const COST_SLIDERS = [
+      { id: "costRent",      param: "rent_max",      boundKey: "rent_max" },
+      { id: "costFood",      param: "food_max",      boundKey: "food_max" },
+      { id: "costUtilities", param: "utilities_max", boundKey: "utilities_max" },
+      { id: "costTransport", param: "transport_max", boundKey: "transport_max" },
+      { id: "costTotal",     param: "total_max",     boundKey: "total_max" },
+    ];
+
+    function updateCostLabel(id) {
+      const el = document.getElementById(id);
+      const valEl = document.getElementById(id + "Val");
+      const v = Number(el.value);
+      valEl.textContent = v >= Number(el.max)
+        ? "bez limitu"
+        : `do ${v.toLocaleString("pl-PL")} zł`;
+    }
+
+    function applyCostBounds(bounds) {
+      COST_SLIDERS.forEach(({ id, boundKey }) => {
+        const el = document.getElementById(id);
+        const raw = bounds ? Number(bounds[boundKey]) : NaN;
+        if (raw > 0) el.max = Math.ceil(raw / 100) * 100;
+        el.value = el.max;
+        updateCostLabel(id);
+      });
+    }
+
+    function resetCostSliders() {
+      COST_SLIDERS.forEach(({ id }) => {
+        const el = document.getElementById(id);
+        el.value = el.max;
+        updateCostLabel(id);
+      });
     }
 
     map.on("click", closeRightPanel);
@@ -1046,10 +1330,94 @@
     });
     languageEl.addEventListener("change", loadData);
     searchFieldEl.addEventListener("input", debounce(loadData, 400));
+
+    // --- Autocomplete ---
+    const autocompleteEl = document.getElementById("searchAutocomplete");
+    let acActiveIndex = -1;
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function highlightMatch(name, query) {
+      const idx = name.toLowerCase().indexOf(query.toLowerCase());
+      if (idx === -1) return escapeHtml(name);
+      return escapeHtml(name.slice(0, idx))
+        + `<em>${escapeHtml(name.slice(idx, idx + query.length))}</em>`
+        + escapeHtml(name.slice(idx + query.length));
+    }
+
+    function closeAutocomplete() {
+      autocompleteEl.classList.remove("open");
+      autocompleteEl.innerHTML = "";
+      acActiveIndex = -1;
+    }
+
+    function selectAutocompleteItem(name) {
+      searchFieldEl.value = name;
+      closeAutocomplete();
+      loadData();
+    }
+
+    function renderAutocomplete(query) {
+      if (!query || query.length < 2) { closeAutocomplete(); return; }
+      const q = query.toLowerCase();
+      const matches = allUniversityFeatures
+        .map(f => f.properties.name)
+        .filter(n => n.toLowerCase().includes(q))
+        .slice(0, 12);
+
+      if (!matches.length) { closeAutocomplete(); return; }
+
+      autocompleteEl.innerHTML = matches.map((name, i) =>
+        `<div class="search-autocomplete-item" data-idx="${i}">${highlightMatch(name, query)}</div>`
+      ).join("");
+      acActiveIndex = -1;
+      autocompleteEl.classList.add("open");
+
+      autocompleteEl.querySelectorAll(".search-autocomplete-item").forEach(el => {
+        el.addEventListener("mousedown", e => {
+          e.preventDefault();
+          selectAutocompleteItem(matches[Number(el.dataset.idx)]);
+        });
+      });
+    }
+
+    searchFieldEl.addEventListener("input", () => {
+      renderAutocomplete(searchFieldEl.value.trim());
+      debouncedRankLoad();
+    });
+
+    searchFieldEl.addEventListener("keydown", e => {
+      const items = autocompleteEl.querySelectorAll(".search-autocomplete-item");
+      if (!items.length) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        acActiveIndex = Math.min(acActiveIndex + 1, items.length - 1);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        acActiveIndex = Math.max(acActiveIndex - 1, 0);
+      } else if (e.key === "Enter" && acActiveIndex >= 0) {
+        e.preventDefault();
+        items[acActiveIndex].dispatchEvent(new MouseEvent("mousedown"));
+        return;
+      } else if (e.key === "Escape") {
+        closeAutocomplete(); return;
+      }
+      items.forEach((el, i) => el.classList.toggle("active", i === acActiveIndex));
+    });
+
+    searchFieldEl.addEventListener("blur", () => setTimeout(closeAutocomplete, 150));
     const debouncedRankLoad = debounce(loadData, 250);
     [rankFromEl, rankToEl].forEach(el => {
       el.addEventListener("input", event => {
         updateRankRange(event.target.id);
+        debouncedRankLoad();
+      });
+    });
+    COST_SLIDERS.forEach(({ id }) => {
+      document.getElementById(id).addEventListener("input", () => {
+        updateCostLabel(id);
         debouncedRankLoad();
       });
     });
@@ -1072,6 +1440,11 @@
       const rankTo = Number(rankToEl.value);
       if (rankFrom > rankBounds.min) params.set("rank_from", rankFrom);
       if (rankTo < rankBounds.max) params.set("rank_to", rankTo);
+      COST_SLIDERS.forEach(({ id, param }) => {
+        const el = document.getElementById(id);
+        const value = Number(el.value);
+        if (value < Number(el.max)) params.set(param, value);
+      });
       const qs = params.toString();
       return `${API_BASE}/universities${qs ? "?" + qs : ""}`;
     }
@@ -1166,11 +1539,13 @@
 
     async function resetFilters() {
       searchFieldEl.value = "";
+      closeAutocomplete();
       countryEl.value = "";
       languageEl.value = "";
       rankFromEl.value = rankBounds.min;
       rankToEl.value = rankBounds.max;
       updateRankRange();
+      resetCostSliders();
       closeRightPanel();
       await updateLanguages("");
       loadData();
@@ -1203,6 +1578,7 @@
         rankToEl.max = rankBounds.max;
         rankToEl.value = rankBounds.max;
         updateRankRange();
+        applyCostBounds(meta.cost_bounds);
       } catch (e) {
         console.error("Błąd ładowania metadanych:", e);
       }
