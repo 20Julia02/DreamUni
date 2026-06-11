@@ -10,7 +10,7 @@ CORS(app)
 DB_CONFIG = {
     "host": "localhost",
     "port": 5432,
-    "dbname": "university_map",
+    "dbname": "dreamuni",
     "user": "postgres",
     "password": "1234",
 }
@@ -87,6 +87,13 @@ def universities():
     if rank_from is not None and rank_to is not None and rank_from > rank_to:
         rank_from, rank_to = rank_to, rank_from
 
+    # Filtry kosztow zycia (PLN/mies.) - suwaki "do X zl"
+    rent_max = request.args.get("rent_max", type=int)
+    food_max = request.args.get("food_max", type=int)
+    utilities_max = request.args.get("utilities_max", type=int)
+    transport_max = request.args.get("transport_max", type=int)
+    total_max = request.args.get("total_max", type=int)
+
     where = [
         "latitude IS NOT NULL",
         "longitude IS NOT NULL",
@@ -125,6 +132,26 @@ def universities():
     if rank_to is not None:
         where.append("qs_rank_min <= %(rank_to)s")
         params["rank_to"] = rank_to
+
+    if rent_max is not None:
+        where.append("lc.rent_1br_pln <= %(rent_max)s")
+        params["rent_max"] = rent_max
+
+    if food_max is not None:
+        where.append("lc.food_monthly_pln <= %(food_max)s")
+        params["food_max"] = food_max
+
+    if utilities_max is not None:
+        where.append("lc.utilities_monthly_pln <= %(utilities_max)s")
+        params["utilities_max"] = utilities_max
+
+    if transport_max is not None:
+        where.append("lc.transport_monthly_pln <= %(transport_max)s")
+        params["transport_max"] = transport_max
+
+    if total_max is not None:
+        where.append("lc.total_monthly_pln <= %(total_max)s")
+        params["total_max"] = total_max
 
     sql = f"""
         WITH ranked AS (
@@ -177,8 +204,20 @@ def universities():
             website,
             image_url,
             institution_profile,
-            teaching_languages
+            teaching_languages,
+            ranked.cost_city,
+            lc.rent_1br_pln,
+            lc.food_monthly_pln,
+            lc.utilities_monthly_pln,
+            lc.transport_monthly_pln,
+            lc.total_monthly_pln,
+            lc.avg_salary_pln,
+            lc.rent_to_salary_pct,
+            lc.data_source AS costs_source
         FROM ranked
+        LEFT JOIN living_costs lc
+               ON lc.cost_city = ranked.cost_city
+              AND lc.costs_country = ranked.costs_country
         WHERE {' AND '.join(where)}
         ORDER BY qs_rank_min NULLS LAST, name;
     """
@@ -214,6 +253,15 @@ def universities():
             "institution_profile": row["institution_profile"],
             "teaching_languages": row["teaching_languages"],
             "teaching_languages_pl": row["teaching_languages"],
+            "cost_city": row["cost_city"],
+            "rent_1br_pln": row["rent_1br_pln"],
+            "food_monthly_pln": row["food_monthly_pln"],
+            "utilities_monthly_pln": row["utilities_monthly_pln"],
+            "transport_monthly_pln": row["transport_monthly_pln"],
+            "total_monthly_pln": row["total_monthly_pln"],
+            "avg_salary_pln": row["avg_salary_pln"],
+            "rent_to_salary_pct": float(row["rent_to_salary_pct"]) if row["rent_to_salary_pct"] is not None else None,
+            "costs_source": row["costs_source"],
         }
 
         features.append({
@@ -289,6 +337,22 @@ def meta():
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute(sql, {"country": country})
             row = cur.fetchone()
+
+        cost_row = None
+        try:
+            with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                cur.execute("""
+                    SELECT
+                        MAX(rent_1br_pln)          AS rent_max,
+                        MAX(food_monthly_pln)      AS food_max,
+                        MAX(utilities_monthly_pln) AS utilities_max,
+                        MAX(transport_monthly_pln) AS transport_max,
+                        MAX(total_monthly_pln)     AS total_max
+                    FROM living_costs;
+                """)
+                cost_row = cur.fetchone()
+        except psycopg2.Error:
+            conn.rollback()
     finally:
         conn.close()
 
@@ -315,6 +379,7 @@ def meta():
         "languages": languages,
         "rank_min": row["rank_min"],
         "rank_max": row["rank_max"],
+        "cost_bounds": dict(cost_row) if cost_row else None,
     })
 
 
@@ -338,6 +403,56 @@ def debug_universities_columns():
 
     return jsonify(rows)
 
+
+@app.get("/partners")
+def partners():
+    """
+    Zwraca partnerów dla danego kraju + globalnych (country = NULL).
+    """
+    country = request.args.get("country", type=str)
+
+    sql = """
+        SELECT id, name, category, icon, url, description
+        FROM partners
+        WHERE country = %(country)s OR country IS NULL
+        ORDER BY country NULLS LAST, category, name;
+    """
+
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(sql, {"country": country})
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    return jsonify([dict(r) for r in rows])
+
+
+@app.get("/dormitories")
+def dormitories():
+    """
+    Zwraca akademiki dla danej uczelni.
+    """
+    university_id = request.args.get("university_id", type=int)
+    if not university_id:
+        return jsonify([])
+
+    sql = """
+        SELECT id, name, latitude, longitude
+        FROM dormitories
+        WHERE university_id = %(uid)s;
+    """
+
+    conn = get_conn()
+    try:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+            cur.execute(sql, {"uid": university_id})
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    return jsonify([dict(r) for r in rows])
 
 if __name__ == "__main__":
     app.run(debug=True)
